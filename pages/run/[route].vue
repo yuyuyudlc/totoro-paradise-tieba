@@ -40,7 +40,9 @@ const handleRun = async () => {
     stuNumber: session.value.stuNumber,
     token: session.value.token,
   });
-  setTimeout(async () => {
+
+  // 立即发送，不再等待 needTime
+  try {
     const res = await TotoroApiWrapper.sunRunExercises(req);
     const runRoute = generateRoute(sunRunPaper.value.mileage, target.value);
     await TotoroApiWrapper.sunRunExercisesDetail({
@@ -53,9 +55,10 @@ const handleRun = async () => {
         token: session.value.token,
       },
     });
-
+  } finally {
     running.value = false;
-  }, needTime.value);
+    needTime.value = 0;
+  }
 };
 onMounted(() => {
   window.addEventListener('beforeunload', handleBeforeUnload);
@@ -73,9 +76,15 @@ function handleBeforeUnload(e: BeforeUnloadEvent) {
 }
 </script>
 <template>
-  <p class="text-body-1">已选择路径 {{ target.pointName }}</p>
-  <p class="text-body-1 mt-2">请再次确认是否开跑</p>
-  <p class="text-body-1 mt-2">开跑时会向龙猫服务器发送请求，所以请尽量不要在开跑后取消</p>
+  <p class="text-body-1">
+    已选择路径 {{ target.pointName }}
+  </p>
+  <p class="text-body-1 mt-2">
+    请再次确认是否开跑
+  </p>
+  <p class="text-body-1 mt-2">
+    开跑时会向龙猫服务器发送请求，所以请尽量不要在开跑后取消
+  </p>
   <VBtn v-if="!runned && !running" color="primary my-4" append-icon="i-mdi-run" @click="handleRun">
     确认开跑
   </VBtn>
