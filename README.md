@@ -1,5 +1,5 @@
 # 航吧龙猫机密文件
-
+- 本仓库fork自BEIYANYUNYI，仅作删除定时器操作
 ## 下载node
 ```
 https://nodejs.org/en/download
